@@ -3,6 +3,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleTodo, removeTodo } from '../redux/todoSlice';
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell,Button} from "@nextui-org/react";
+import UpdateTodo from './UpdateTodo';
 
 
 const ToDoList = () => {
@@ -18,18 +19,18 @@ const ToDoList = () => {
   };
 
 return (
-    <div className='flex justify-center items-center p-4'>
-        <div className='flex justify-center items-center w-1/3'>
+    <div className='flex justify-center items-center p-4 '>
+        <div className='flex justify-center items-center '>
         {todos.length>0 && (
             <Table aria-label="To-Do List">
                 <TableHeader>
-                    <TableColumn>Task</TableColumn>
-                    <TableColumn>Actions</TableColumn>
+                    <TableColumn className='text-center'>Task</TableColumn>
+                    <TableColumn className='text-center'>Actions</TableColumn>
                 </TableHeader>
                 <TableBody>
                     {todos.map((todo) => (
                         <TableRow key={todo.id}>
-                            <TableCell>
+                            <TableCell className='text-center'>
                                 <span
                                     style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}
                                     onClick={() => handleToggleTodo(todo.id)}
@@ -37,8 +38,11 @@ return (
                                     {todo.text}
                                 </span>
                             </TableCell>
-                            <TableCell>
-                                <Button onClick={() => handleRemoveTodo(todo.id)} size='sm'>Delete</Button>
+                            <TableCell className='row-span-4'>
+                                <div className='flex space-x-2'>
+                                    <Button size='sm' color='secondary'><UpdateTodo todo={todo}/></Button>
+                                    <Button onClick={() => handleRemoveTodo(todo.id)} color='primary' size='sm'>Delete</Button>
+                                </div>
                             </TableCell>
                         </TableRow>
                     ))}
@@ -46,7 +50,7 @@ return (
             </Table>
         )}
     </div>
-        </div>
+    </div>
 );
 };
 

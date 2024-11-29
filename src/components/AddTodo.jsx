@@ -26,7 +26,7 @@ const AddTodo = () => {
     return (
         <div>
             <div className='flex justify-center items-center'>
-                <h2 className='text-2xl font-bold text-white'>To-Do App</h2>
+                <h2 className='text-2xl font-bold text-white'>Simple To-Do App</h2>
             </div>
 
 
