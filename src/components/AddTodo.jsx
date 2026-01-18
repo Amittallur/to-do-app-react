@@ -1,74 +1,71 @@
 // src/components/AddTodo.js
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addTodo } from '../redux/todoSlice';
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Checkbox, Input, Link } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 
 const AddTodo = () => {
-    const [todoText, setTodoText] = useState('');
+  const [todoText, setTodoText] = useState('');
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-    const handleAddTodo = () => {
-        onOpenChange();
-        if (todoText.trim()) {
-            const newTodo = {
-                id: Date.now(),
-                text: todoText,
-                completed: false,
-            };
-            dispatch(addTodo(newTodo));
-            setTodoText('');
-        }
+  const handleSubmit = () => {
+    if (!todoText.trim()) {
+      setHasSubmitted(true);
+      return;
+    }
+    const newTodo = {
+      id: Date.now(),
+      text: todoText,
+      completed: false,
     };
+    dispatch(addTodo(newTodo));
+    setTodoText('');
+    setHasSubmitted(false);
+  };
 
-    return (
-        <div>
-            <div className='flex justify-center items-center'>
-                <h2 className='text-2xl font-bold text-white'>Simple To-Do App</h2>
-            </div>
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      handleSubmit();
+    }
+  };
 
+  const isInvalid = hasSubmitted && !todoText.trim();
 
-
-
-            <div className='flex justify-center items-center p-4'>
-
-                <Button onPress={onOpen} color='primary'>Add Todo</Button>
-                <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-                    <ModalContent>
-                        {(onClose) => (
-                            <>
-                                <ModalHeader className="flex flex-col gap-1">Todos</ModalHeader>
-                                <ModalBody>
-                                    <div className='w-full'>
-                                        <Input
-                                            type="text"
-                                            value={todoText}
-                                            onChange={(e) => setTodoText(e.target.value)}
-                                            placeholder="Add a new to-do"
-                                        />
-                                       
-                                    </div>
-                                </ModalBody>
-                                <ModalFooter>
-                                    <Button color="danger" variant="light" onPress={onClose}>
-                                        Close
-                                    </Button>
-                                    <Button color="primary"  onClick={handleAddTodo} >
-                                        Add
-                                    </Button>
-                                </ModalFooter>
-                            </>
-                        )}
-                    </ModalContent>
-                </Modal>
-            </div>
-
-
-
-        </div>
-    );
+  return (
+    <div className="flex flex-col items-center gap-4 py-10">
+      <h1 className="text-3xl font-extrabold tracking-tight text-white drop-shadow-md">
+        Your Smart To-Do
+      </h1>
+      <p className="text-sm text-white/80">
+        Capture tasks quickly, stay focused, and track what matters.
+      </p>
+      <div className="w-full max-w-3xl flex flex-col gap-2 md:flex-row">
+        <Input
+          type="text"
+          value={todoText}
+          onChange={(e) => setTodoText(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Add a task and press Enter"
+          aria-label="Add a new task"
+          autoFocus
+          isInvalid={isInvalid}
+          errorMessage={isInvalid ? 'Please enter a task before adding.' : ''}
+          className="flex-1"
+        />
+        <Button
+          color="primary"
+          variant="shadow"
+          onPress={handleSubmit}
+          className="md:w-auto w-full"
+        >
+          Add task
+        </Button>
+      </div>
+    </div>
+  );
 };
 
 export default AddTodo;
