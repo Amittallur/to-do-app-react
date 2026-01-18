@@ -1,5 +1,5 @@
 // src/components/UpdateTodo.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateTodo } from '../redux/todoSlice';
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input } from "@nextui-org/react";
@@ -10,14 +10,15 @@ const UpdateTodo = ({ todo }) => {
     const dispatch = useDispatch();
 
     const handleUpdateTodo = () => {
-        onOpenChange();
-        if (todoText.trim()) {
-            const updatedTodo = {
-                ...todo,
-                text: todoText,
-            };
-            dispatch(updateTodo(updatedTodo));
+        if (!todoText.trim()) {
+            return;
         }
+        const updatedTodo = {
+            ...todo,
+            text: todoText,
+        };
+        dispatch(updateTodo(updatedTodo));
+        onOpenChange();
     };
 
     return (
